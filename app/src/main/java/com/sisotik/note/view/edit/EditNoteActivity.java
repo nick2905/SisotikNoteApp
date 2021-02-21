@@ -82,7 +82,9 @@ public class EditNoteActivity extends AppCompatActivity {
         mViewModel.putOneNoteResponse(id, note).observe(this, response -> {
             if (response.isSuccess()) {
                 swipeRefreshLayout.setRefreshing(false);
-                startActivity(new Intent(this, MainActivity.class));
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
                 finish();
             } else {
                 swipeRefreshLayout.setRefreshing(false);
@@ -96,7 +98,9 @@ public class EditNoteActivity extends AppCompatActivity {
         mViewModel.deleteOneNoteResponse(id).observe(this, statusResponse -> {
             if (statusResponse.isSuccess()) {
                 swipeRefreshLayout.setRefreshing(false);
-                startActivity(new Intent(this, MainActivity.class));
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
                 finish();
             } else {
                 swipeRefreshLayout.setRefreshing(false);

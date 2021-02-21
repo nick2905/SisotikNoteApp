@@ -56,12 +56,13 @@ public class TambahNoteActivity extends AppCompatActivity {
         ResultItem note = new ResultItem();
         note.setTitleNote(editTextTitle.getText().toString());
         note.setDescNote(editTextDesc.getText().toString());
-        Toast.makeText(this, editTextTitle.getText().toString(), Toast.LENGTH_SHORT).show();
 
         mViewModel.postOneNote(note).observe(this, response -> {
             if (response.isSuccess()) {
                 progressBar.setVisibility(View.GONE);
-                startActivity(new Intent(this, MainActivity.class));
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
                 finish();
             } else {
                 progressBar.setVisibility(View.GONE);
