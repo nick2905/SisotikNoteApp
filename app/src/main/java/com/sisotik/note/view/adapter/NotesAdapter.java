@@ -1,5 +1,7 @@
 package com.sisotik.note.view.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,15 +12,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sisotik.note.R;
 import com.sisotik.note.model.response.ResultItem;
+import com.sisotik.note.view.edit.EditNoteActivity;
 
 import java.util.ArrayList;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHolder> {
 
     private ArrayList<ResultItem> listNote;
+    private Context context;
 
-    public NotesAdapter(ArrayList<ResultItem> listAllNote) {
+    public NotesAdapter(ArrayList<ResultItem> listAllNote, Context context) {
         this.listNote = listAllNote;
+        this.context = context;
     }
 
     @NonNull
@@ -35,7 +40,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
         holder.txtTitle.setText(note.getTitleNote());
         holder.txtDescription.setText(note.getDescNote());
         holder.itemView.setOnClickListener(v -> {
-
+            Intent intentData = new Intent(context, EditNoteActivity.class);
+            intentData.putExtra(EditNoteActivity.EXTRA_ID, note.getId());
+            intentData.putExtra(EditNoteActivity.EXTRA_TITLE, note.getTitleNote());
+            intentData.putExtra(EditNoteActivity.EXTRA_DESC, note.getDescNote());
+            context.startActivity(intentData);
         });
     }
 

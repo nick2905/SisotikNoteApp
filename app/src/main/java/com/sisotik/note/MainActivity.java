@@ -1,7 +1,7 @@
 package com.sisotik.note;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -9,8 +9,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.sisotik.note.model.response.ResultItem;
 import com.sisotik.note.view.adapter.NotesAdapter;
+import com.sisotik.note.view.tambah.TambahNoteActivity;
 import com.sisotik.note.viewmodel.NotesViewModel;
 
 import java.util.ArrayList;
@@ -22,14 +24,18 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView rvNote;
     private NotesAdapter mAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // initialisation
         rvNote = findViewById(R.id.rvNotes);
         swipeRefreshLayout = findViewById(R.id.swipeRefresh);
-        mAdapter = new NotesAdapter(noteList);
+        fab = findViewById(R.id.fab);
+
+        mAdapter = new NotesAdapter(noteList, this);
         rvNote.setLayoutManager(new LinearLayoutManager(this));
         rvNote.setAdapter(mAdapter);
 
@@ -41,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(() -> {
             swipeRefreshLayout.setRefreshing(true);
             setupData();
+        });
+
+        fab.setOnClickListener(v -> {
+            startActivity(new Intent(this, TambahNoteActivity.class));
         });
     }
 
