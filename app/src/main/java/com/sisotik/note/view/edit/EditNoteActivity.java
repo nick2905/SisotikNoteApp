@@ -26,6 +26,8 @@ public class EditNoteActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     private NotesViewModel mViewModel;
 
+    private String title, desc, id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,11 +38,15 @@ public class EditNoteActivity extends AppCompatActivity {
         hapusBtn = findViewById(R.id.btnHapus);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshEdit);
 
+        title = getIntent().getStringExtra(EXTRA_TITLE);
+        desc = getIntent().getStringExtra(EXTRA_DESC);
+        id = getIntent().getStringExtra(EXTRA_ID);
+
         EditText dummyEditText = new EditText(this);
-        dummyEditText.setText(EXTRA_TITLE);
+        dummyEditText.setText(title);
         editTextTitle.setText(dummyEditText.getText().toString());
 
-        dummyEditText.setText(EXTRA_DESC);
+        dummyEditText.setText(desc);
         editTextDesc.setText(dummyEditText.getText().toString());
 
         mViewModel = new ViewModelProvider(this, new ViewModelProvider.NewInstanceFactory()).get(NotesViewModel.class);
@@ -54,11 +60,7 @@ public class EditNoteActivity extends AppCompatActivity {
         });
 
         hapusBtn.setOnClickListener(v -> {
-            if (isEmpty()) {
-                Toast.makeText(this, "Harap isi data yang kosong", Toast.LENGTH_SHORT).show();
-            } else {
-                deleteNote();
-            }
+            deleteNote();
         });
 
     }
@@ -76,7 +78,8 @@ public class EditNoteActivity extends AppCompatActivity {
         ResultItem note = new ResultItem();
         note.setTitleNote(editTextTitle.getText().toString());
         note.setDescNote(editTextDesc.getText().toString());
-        mViewModel.putOneNoteResponse(EXTRA_ID, note).observe(this, response -> {
+
+        mViewModel.putOneNoteResponse(id, note).observe(this, response -> {
             if (response.isSuccess()) {
                 swipeRefreshLayout.setRefreshing(false);
                 startActivity(new Intent(this, MainActivity.class));
@@ -90,7 +93,7 @@ public class EditNoteActivity extends AppCompatActivity {
 
     private void deleteNote() {
         swipeRefreshLayout.setRefreshing(true);
-        mViewModel.deleteOneNoteResponse(EXTRA_ID).observe(this, statusResponse -> {
+        mViewModel.deleteOneNoteResponse(id).observe(this, statusResponse -> {
             if (statusResponse.isSuccess()) {
                 swipeRefreshLayout.setRefreshing(false);
                 startActivity(new Intent(this, MainActivity.class));
